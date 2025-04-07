@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import BASE_URL from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
-import { addRequest } from "../utils/requestsSlice";
+import { addRequest, removeRequest } from "../utils/requestsSlice";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,19 @@ const Requests = () => {
         withCredentials: true,
       });
       dispatch(addRequest(res.data.connectionRequest));
-      console.log(res.data.connectionRequest);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRequest = async (_id, status) => {
+    try {
+      await axios.post(
+        BASE_URL + "/request/review/" + status + "/" + _id,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeRequest(_id));
     } catch (error) {
       console.log(error);
     }
@@ -31,7 +43,7 @@ const Requests = () => {
   return (
     <div className="flex flex-col justify-center items-center my-10 ">
       <h2 className="text-4xl text-zinc-500 mb-6">Requests</h2>
-      {requestData.map(({ fromUserId }) => {
+      {requestData.map(({ fromUserId, _id }) => {
         const { firstName, lastName, photoURL, age, about, gender } =
           fromUserId;
         return (
@@ -50,8 +62,18 @@ const Requests = () => {
               <div>{about}</div>
             </div>
             <div className="flex gap-3 mr-5">
-              <button className="btn btn-primary">Accept</button>
-              <button className="btn btn-secondary">Reject</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => handleRequest(_id, "accepted")}
+              >
+                Accept
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => handleRequest(_id, "rejected")}
+              >
+                Reject
+              </button>
             </div>
           </div>
         );
