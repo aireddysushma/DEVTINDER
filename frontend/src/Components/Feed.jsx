@@ -23,6 +23,11 @@ const Feed = () => {
   useEffect(() => {
     handleProfileFeed();
   }, []);
+  
+  if (!feed) return null;
+  if (feed.length === 0) {
+    return <div className="flex justify-center my-20">No feed found</div>;
+  }
 
   return (
     feed && (

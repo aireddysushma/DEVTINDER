@@ -12,7 +12,7 @@ const Body = () => {
   const navigate = useNavigate();
   const userData = useSelector((store) => store.user);
   const fetchUser = async () => {
-    if(userData) return;
+    if (userData) return;
     try {
       const res = await axios.get(BASE_URL + "/profile/view", {
         withCredentials: true,
@@ -31,11 +31,13 @@ const Body = () => {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <NavBar />
-      <Outlet />
+      <div className="flex-grow">
+        <Outlet />
+      </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
